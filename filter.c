@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     // Define allowable filters
     char *filters = "begr";
 
+    /* first getopt returns the first element in argv that starts with "-" or "--" (ie an option), so filter becomes the character preceded by a "-" in the command line */
     // Get filter flag and check validity
     char filter = getopt(argc, argv, filters);
     if (filter == '?')
@@ -18,6 +19,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    /* Second getopt returns the next option, or -1 if there are no more */
     // Ensure only one filter
     if (getopt(argc, argv, filters) != -1)
     {
@@ -25,6 +27,7 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    /* optind is the number of options counted by getopt (starting at 1), so should be 1. argc should be number of options plus 2 for infile and outfile */
     // Ensure proper usage
     if (argc != optind + 2)
     {
@@ -32,10 +35,12 @@ int main(int argc, char *argv[])
         return 3;
     }
 
+    /* infile stores argv element 1, or the second command line argument, and outfile stores argv element 2, or the third command line argument */
     // Remember filenames
     char *infile = argv[optind];
     char *outfile = argv[optind + 1];
 
+    /* opens the infile previously taken from the second command line argument */
     // Open input file
     FILE *inptr = fopen(infile, "r");
     if (inptr == NULL)
@@ -44,6 +49,7 @@ int main(int argc, char *argv[])
         return 4;
     }
 
+    /* opens the outfile previously taken from the third command line argument */
     // Open output file
     FILE *outptr = fopen(outfile, "w");
     if (outptr == NULL)
@@ -52,6 +58,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Could not create %s.\n", outfile);
         return 5;
     }
+
 
     // Read infile's BITMAPFILEHEADER
     BITMAPFILEHEADER bf;
